@@ -1,7 +1,7 @@
 import { StatusCodes } from 'http-status-codes'
 import { boardService } from '~/services/boardService'
 
-const createNew = async (req, res, next) => {
+const createBoard = async (req, res, next) => {
   try {
     // console.log('req.body:', req.body)
     // console.log('req.query:', req.query)
@@ -11,7 +11,7 @@ const createNew = async (req, res, next) => {
     // console.log('req.jwtDecoded:', req.jwtDecoded)
 
     // Điều hướng sang tầng Service
-    const createdBoard = await boardService.createNew(req.body)
+    const createdBoard = await boardService.createBoard(req.body)
 
     //Có kết quả thì trả về phía Client
     res
@@ -23,5 +23,5 @@ const createNew = async (req, res, next) => {
 }
 
 export const boardController = {
-  createNew,
+  createBoard,
 }
