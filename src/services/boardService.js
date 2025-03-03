@@ -12,13 +12,16 @@ const createBoard = async (reqBody) => {
 
     // Gọi tới tầng Model để xử lí lưu bản ghi newBoard vào trong DB
     const createdBoard = await boardModel.createBoard(newBoard)
-    console.log(createdBoard)
+
+    // Lấy bản ghi Board sau khi tạo mới (tùy từng đặc thù dự án)
+    const NewBoard = await boardModel.findOneById(createdBoard.insertedId)
+
 
     // Làm thêm các logic khác với các collection tùy vào đặc thù của các dự án
     // Bắn email, notification về cho admin khi 1 cái board mới được tạo ...
 
     //trong Service luôn phải có return
-    return createdBoard
+    return NewBoard
   } catch (error) {
     throw error
   }
