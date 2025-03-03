@@ -9,6 +9,6 @@ Router.route('/')
   .get((req, res) => {
     res.status(StatusCodes.OK).json({ message: 'GET: API get list boards' })
   })
-  .post(boardValidation.createNew, boardController.createNew)
+  .post(boardValidation.createBoard, boardController.createBoard)
 
 export const boardRoute = Router

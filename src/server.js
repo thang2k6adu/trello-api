@@ -25,7 +25,7 @@ const START_SERVER = () => {
       `3. Hello ${env.AUTHOR}, I am running at http://${env.APP_HOST}:${env.APP_PORT}/`
     )
   })
-
+ 
   //Thực hiện các tác vụ clean up trước khi dừng server
   exithook(() => {
     console.log('4. Server is shutting down')
