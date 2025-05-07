@@ -14,9 +14,17 @@ const createBoard = async (req, res, next) => {
     const createdBoard = await boardService.createBoard(req.body)
 
     //Có kết quả thì trả về phía Client
-    res
-      .status(StatusCodes.CREATED)
-      .json(createdBoard)
+    res.status(StatusCodes.CREATED).json(createdBoard)
+  } catch (error) {
+    next(error)
+  }
+}
+const getDetails = async (req, res, next) => {
+  try {
+    const boardId = req.params.id
+    const board = await boardService.getDetails(boardId)
+
+    res.status(StatusCodes.OK).json(board)
   } catch (error) {
     next(error)
   }
@@ -24,4 +32,5 @@ const createBoard = async (req, res, next) => {
 
 export const boardController = {
   createBoard,
+  getDetails,
 }

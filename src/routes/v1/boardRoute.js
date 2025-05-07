@@ -11,4 +11,14 @@ Router.route('/')
   })
   .post(boardValidation.createBoard, boardController.createBoard)
 
+Router.route('/:id')
+  .get((req, res) => {
+    boardController.getDetails(req, res)
+  })
+  .put((req, res) => {
+    res.status(StatusCodes.OK).json({ message: 'PUT: API update board by id' })
+  })
+  .delete((req, res) => {
+    res.status(StatusCodes.OK).json({ message: 'DELETE: API delete board by id' })
+  })
 export const boardRoute = Router

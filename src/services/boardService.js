@@ -26,7 +26,21 @@ const createBoard = async (reqBody) => {
     throw error
   }
 }
+const getDetails = async (boardId) => {
+  try {
+    // Gọi tới tầng Model để xử lí lưu bản ghi newBoard vào trong DB
+    const board = await boardModel.getDetails(boardId)
+    if (!board) {
+      throw new ApiError(StatusCodes.NOT_FOUND, 'Board not found')
+    }
+
+    return board
+  } catch (error) {
+    throw error
+  }
+}
 
 export const boardService = {
   createBoard,
+  getDetails
 }

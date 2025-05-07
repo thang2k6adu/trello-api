@@ -9,20 +9,26 @@ const BOARD_COLLECTION_SCHEMA = Joi.object({
   title: Joi.string().required().min(3).max(50).trim().strict(),
   slug: Joi.string().required().min(3).trim().strict(),
   description: Joi.string().required().min(3).max(256).trim().strict(),
-  columnOrderIds: Joi.array().items(Joi.string().pattern(OBJECT_ID_RULE).message(OBJECT_ID_RULE_MESSAGE)).default([]),
+  columnOrderIds: Joi.array()
+    .items(Joi.string().pattern(OBJECT_ID_RULE).message(OBJECT_ID_RULE_MESSAGE))
+    .default([]),
   createdAt: Joi.date().timestamp('javascript').default(Date.now),
   updatedAt: Joi.date().timestamp('javascript').default(null),
   _destroy: Joi.boolean().default(false),
 })
 
 const validateBeforeCreate = async (data) => {
-  return await BOARD_COLLECTION_SCHEMA.validateAsync(data, { abortEarly: false })
+  return await BOARD_COLLECTION_SCHEMA.validateAsync(data, {
+    abortEarly: false,
+  })
 }
 
 const createBoard = async (data) => {
   try {
     const validData = await validateBeforeCreate(data)
-    const createdBoard = await GET_DB().collection(BOARD_COLLECTION_NAME).insertOne(validData)
+    const createdBoard = await GET_DB()
+      .collection(BOARD_COLLECTION_NAME)
+      .insertOne(validData)
     return createdBoard
   } catch (error) {
     // Để new Error mới có stack trace
@@ -32,7 +38,21 @@ const createBoard = async (data) => {
 
 const findOneById = async (id) => {
   try {
-    const result = await GET_DB().collection(BOARD_COLLECTION_NAME).findOne({ _id: new ObjectId(id) })
+    const result = await GET_DB()
+      .collection(BOARD_COLLECTION_NAME)
+      .findOne({ _id: new ObjectId(id) })
+    return result
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
+// Query tổng hợp aggregate để lấy toàn bộ Columns và Cards thuộc về Board
+const getDetails = async (id) => {
+  try {
+    const result = await GET_DB()
+      .collection(BOARD_COLLECTION_NAME)
+      .findOne({ _id: new ObjectId(id) })
     return result
   } catch (error) {
     throw new Error(error)
@@ -44,4 +64,5 @@ export const boardModel = {
   BOARD_COLLECTION_SCHEMA,
   createBoard,
   findOneById,
+  getDetails,
 }
