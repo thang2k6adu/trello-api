@@ -1,6 +1,8 @@
 /* eslint-disable no-console */
 
 import express from 'express'
+import cors from 'cors'
+import { corsOptions } from '~/config/cors'
 import exithook from 'async-exit-hook'
 import { CONNECT_DB, CLOSE_DB } from '~/config/mongodb'
 import { env } from '~/config/environment'
@@ -9,6 +11,8 @@ import { errorHandlingMiddleware } from '~/middlewares/errorHandlingMiddleware'
 
 const START_SERVER = () => {
   const app = express()
+
+  app.use(cors(corsOptions))
 
   // Enable req.body data with express.json() middleware, process RAW data
   app.use(express.json())
@@ -25,7 +29,7 @@ const START_SERVER = () => {
       `3. Hello ${env.AUTHOR}, I am running at http://${env.APP_HOST}:${env.APP_PORT}/`
     )
   })
- 
+
   //Thực hiện các tác vụ clean up trước khi dừng server
   exithook(() => {
     console.log('4. Server is shutting down')
