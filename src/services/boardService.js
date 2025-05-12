@@ -1,6 +1,7 @@
 /* eslint-disable no-useless-catch */
 import { slugify } from '~/utils/formatters'
 import { boardModel } from '~/models/boardModel'
+import { cloneDeep } from 'lodash'
 
 const createBoard = async (reqBody) => {
   try {
@@ -34,7 +35,18 @@ const getDetails = async (boardId) => {
       throw new ApiError(StatusCodes.NOT_FOUND, 'Board not found')
     }
 
-    return board
+    // Deep clone là tạo ra một cái hoàn toàn mới để xử lí
+    // Không ảnh huongwr tới board ban đầu
+    // Tùy mục đích về sau mà có thể quyết định clone deep hay không
+    const resBoard = cloneDeep(board)
+    // Đưa card về dùng column
+    resBoard.columns.forEach(column => {
+      column.cards = resBoard.cards.filter(card => card.columnId.toString() === column._id.toString())
+    })
+
+    delete resBoard.cards
+
+    return resBoard
   } catch (error) {
     throw error
   }
