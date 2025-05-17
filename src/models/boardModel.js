@@ -21,6 +21,8 @@ const BOARD_COLLECTION_SCHEMA = Joi.object({
   _destroy: Joi.boolean().default(false),
 })
 
+const INVALD_UPDATE_FIELD = ['_id', 'createdAt', 'updatedAt', '_destroy']
+
 const validateBeforeCreate = async (data) => {
   return await BOARD_COLLECTION_SCHEMA.validateAsync(data, {
     abortEarly: false,
@@ -38,7 +40,7 @@ const createBoard = async (data) => {
     // Để new Error mới có stack trace
     throw new Error(error)
   }
-} 
+}
 
 const findOneById = async (id) => {
   try {
@@ -80,7 +82,8 @@ const getDetails = async (id) => {
             as: 'cards',
           },
         },
-      ]).toArray()
+      ])
+      .toArray()
     // Mục đích là lấy 1 board và các cột và card thuộc về board đó, mà aggregate trả 1 mảng
     return result[0] || null
   } catch (error) {
@@ -98,7 +101,28 @@ const pushColumnOrderIds = async (column) => {
         { $push: { columnOrderIds: new ObjectId(column._id) } },
         { returnDocument: 'after' } // Trả về document sau khi update
       )
-    return result.value
+    return result
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
+const updateBoard = async (boardId, updateData) => {
+  try {
+    Object.keys(updateData).forEach((fieldName) => {
+      if (INVALD_UPDATE_FIELD.includes(fieldName)) {
+        delete updateData[fieldName]
+      }
+    })
+
+    const result = await GET_DB()
+      .collection(BOARD_COLLECTION_NAME)
+      .findOneAndUpdate(
+        { _id: new ObjectId(boardId) },
+        { $set: updateData },
+        { returnDocument: 'after' } // Trả về document sau khi update, mặc định là before
+      )
+    return result
   } catch (error) {
     throw new Error(error)
   }
@@ -111,4 +135,5 @@ export const boardModel = {
   findOneById,
   getDetails,
   pushColumnOrderIds,
+  updateBoard,
 }
