@@ -38,7 +38,7 @@ const createBoard = async (data) => {
     // Để new Error mới có stack trace
     throw new Error(error)
   }
-}
+} 
 
 const findOneById = async (id) => {
   try {
@@ -82,7 +82,23 @@ const getDetails = async (id) => {
         },
       ]).toArray()
     // Mục đích là lấy 1 board và các cột và card thuộc về board đó, mà aggregate trả 1 mảng
-    return result[0] || {}
+    return result[0] || null
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
+// Push 1 giá trị columnId vào cuối mảng columnOrderIds trong collection boards
+const pushColumnOrderIds = async (column) => {
+  try {
+    const result = await GET_DB()
+      .collection(BOARD_COLLECTION_NAME)
+      .findOneAndUpdate(
+        { _id: new ObjectId(column.boardId) },
+        { $push: { columnOrderIds: new ObjectId(column._id) } },
+        { returnDocument: 'after' } // Trả về document sau khi update
+      )
+    return result.value
   } catch (error) {
     throw new Error(error)
   }
@@ -94,4 +110,5 @@ export const boardModel = {
   createBoard,
   findOneById,
   getDetails,
+  pushColumnOrderIds,
 }
