@@ -2,6 +2,8 @@
 import { slugify } from '~/utils/formatters'
 import { boardModel } from '~/models/boardModel'
 import { cloneDeep } from 'lodash'
+import { StatusCodes } from 'http-status-codes'
+import { ApiError } from '~/utils/ApiError'
 
 const createBoard = async (reqBody) => {
   try {
@@ -52,7 +54,22 @@ const getDetails = async (boardId) => {
   }
 }
 
+const updateBoard = async (boardId, reqBody) => {
+  try {
+    const updateData = {
+      ...reqBody,
+      updatedAt: Date.now(),
+    }
+    const updatedBoard = await boardModel.updateBoard(boardId, updateData)
+
+    return updatedBoard
+  } catch (error) {
+    throw error
+  }
+}
+
 export const boardService = {
   createBoard,
-  getDetails
+  getDetails,
+  updateBoard,
 }
