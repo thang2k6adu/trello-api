@@ -107,6 +107,22 @@ const pushColumnOrderIds = async (column) => {
   }
 }
 
+// Lấy 1 phần tử columnId ra khỏi mảng columnOrderIds rồi xóa nó đi
+const pullColumnOrderIds = async (column) => {
+  try {
+    const result = await GET_DB()
+      .collection(BOARD_COLLECTION_NAME)
+      .findOneAndUpdate(
+        { _id: new ObjectId(column.boardId) },
+        { $pull: { columnOrderIds: new ObjectId(column._id) } },
+        { returnDocument: 'after' } // Trả về document sau khi update
+      )
+    return result
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
 const updateBoard = async (boardId, updateData) => {
   try {
     Object.keys(updateData).forEach((fieldName) => {
@@ -140,4 +156,5 @@ export const boardModel = {
   getDetails,
   pushColumnOrderIds,
   updateBoard,
+  pullColumnOrderIds,
 }
