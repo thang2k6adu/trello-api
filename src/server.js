@@ -23,12 +23,21 @@ const START_SERVER = () => {
   //Middleware xử lí lỗi tập trung, chỉ được gọi khi có lỗi xảy ra trong app
   app.use(errorHandlingMiddleware)
 
-  app.listen(env.APP_PORT, env.APP_HOST, () => {
-    // eslint-disable-next-line no-console
-    console.log(
-      `3. Hello ${env.AUTHOR}, I am running at http://${env.APP_HOST}:${env.APP_PORT}/`
-    )
-  })
+  if (env.BUILD_MODE === 'production') {
+    app.listen(process.env.PORT, () => {
+      // eslint-disable-next-line no-console
+      console.log(
+        `3.Production mode: Hello ${env.AUTHOR}, I am running at Port: ${env.LOCAL_DEV_APP_PORT}/`
+      )
+    })
+  } else {
+    app.listen(env.LOCAL_DEV_APP_PORT, env.LOCAL_DEV_APP_HOST, () => {
+      // eslint-disable-next-line no-console
+      console.log(
+        `3.Development mode: Hello ${env.AUTHOR}, I am running at http://${env.LOCAL_DEV_APP_HOST}:${env.LOCAL_DEV_APP_PORT}/`
+      )
+    })
+  }
 
   //Thực hiện các tác vụ clean up trước khi dừng server
   exithook(() => {
