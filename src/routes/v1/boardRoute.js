@@ -19,4 +19,9 @@ Router.route('/:id')
       .status(StatusCodes.OK)
       .json({ message: 'DELETE: API delete board by id' })
   })
+
+// API hỗ trợ việc di chuyển card giữa 2 column khác nhau
+Router.route('/supports/moving_card')
+  .put(boardValidation.moveCardBetweenDifferentColumn, boardController.moveCardBetweenDifferentColumn)
+
 export const boardRoute = Router
