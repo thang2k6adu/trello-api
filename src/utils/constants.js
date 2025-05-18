@@ -1,8 +1,9 @@
 // Những domain được phép truy cập vào tài nguyên Server
 export const WHITELIST_DOMAINS = [
-    // sau này deploy lên server thì thêm domain của server vào đây
+  // sau này deploy lên server thì thêm domain của server vào đây
+  'https://trello-web-rho.vercel.app/',
 ]
 export const BOARD_TYPE = {
-    PUBLIC: 'public',
-    PRIVATE: 'private',
+  PUBLIC: 'public',
+  PRIVATE: 'private',
 }
