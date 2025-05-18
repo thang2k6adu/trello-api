@@ -2,6 +2,7 @@ import Joi from 'joi'
 import ApiError from '~/utils/ApiError'
 import { StatusCodes } from 'http-status-codes'
 import { BOARD_TYPE } from '~/utils/constants'
+import { OBJECT_ID_RULE, OBJECT_ID_RULE_MESSAGE } from '~/utils/constants'
 
 const createBoard = async (req, res, next) => {
   //Việc Validate dữ liệu BẮT BUỘC phải có ở phía Back-end vì đây là điều cuối để lưu trữ dữ liệu vào database
@@ -28,6 +29,8 @@ const updateBoard = async (req, res, next) => {
     title: Joi.string().min(3).max(50).trim().strict(),
     description: Joi.string().min(3).max(256).trim().strict(),
     type: Joi.string().valid(BOARD_TYPE.PUBLIC, BOARD_TYPE.PRIVATE),
+    columnOrderIds: Joi.array()
+      .items(Joi.string().pattern(OBJECT_ID_RULE).message(OBJECT_ID_RULE_MESSAGE)),
   })
 
   try {
@@ -42,6 +45,7 @@ const updateBoard = async (req, res, next) => {
     next(new ApiError(StatusCodes.UNPROCESSABLE_ENTITY, new Error(error).message))
   }
 }
+
 export const boardValidation = {
   createBoard,
   updateBoard,

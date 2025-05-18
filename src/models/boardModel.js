@@ -21,7 +21,7 @@ const BOARD_COLLECTION_SCHEMA = Joi.object({
   _destroy: Joi.boolean().default(false),
 })
 
-const INVALD_UPDATE_FIELD = ['_id', 'createdAt', 'updatedAt', '_destroy']
+const INVALD_UPDATE_FIELD = ['_id', 'createdAt']
 
 const validateBeforeCreate = async (data) => {
   return await BOARD_COLLECTION_SCHEMA.validateAsync(data, {
