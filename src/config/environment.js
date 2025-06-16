@@ -10,4 +10,7 @@ export const env = {
   BUILD_MODE: process.env.BUILD_MODE,
 
   AUTHOR: process.env.AUTHOR,
+  JWT_SECRET: process.env.JWT_SECRET,
+  JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET,
+  JWT_VERIFICATION_SECRET: process.env.JWT_VERIFICATION_SECRET
 }
