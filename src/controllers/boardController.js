@@ -51,9 +51,26 @@ const moveCardBetweenDifferentColumn = async (req, res, next) => {
   }
 }
 
+const getAllBoards = async (req, res, next) => {
+  try {
+    // Nếu muốn có filter từ query params, ví dụ ?type=public
+    const filter = {}
+    if (req.query.type) {
+      filter.type = req.query.type
+    }
+
+    const boards = await boardService.getAllBoards(filter)
+
+    res.status(StatusCodes.OK).json(boards)
+  } catch (error) {
+    next(error)
+  }
+}
+
 export const boardController = {
   createBoard,
   getDetails,
   updateBoard,
   moveCardBetweenDifferentColumn,
+  getAllBoards,
 }

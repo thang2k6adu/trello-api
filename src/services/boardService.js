@@ -7,7 +7,6 @@ import { ApiError } from '~/utils/ApiError'
 import { columnModel } from '~/models/columnModel'
 import { cardModel } from '~/models/cardModel'
 
-
 const createBoard = async (reqBody) => {
   try {
     const newBoard = {
@@ -74,7 +73,6 @@ const updateBoard = async (boardId, reqBody) => {
 
 const moveCardBetweenDifferentColumn = async (reqBody) => {
   try {
-
     // Di chuyển card sang Column khác:
     // B1: Cập nhật mảng cardOrderIds của Column ban đầu chứa nó (bản chất là xóa id của card ra khỏi mảng)
     await columnModel.updateColumn(reqBody.prevColumnId, {
@@ -96,7 +94,16 @@ const moveCardBetweenDifferentColumn = async (reqBody) => {
       columnId: reqBody.nextColumnId,
     })
 
-    return { updateResult: 'Successfully!'}
+    return { updateResult: 'Successfully!' }
+  } catch (error) {
+    throw error
+  }
+}
+
+const getAllBoards = async (filter = {}) => {
+  try {
+    const boards = await boardModel.getAllBoards(filter)
+    return boards
   } catch (error) {
     throw error
   }
@@ -107,4 +114,5 @@ export const boardService = {
   getDetails,
   updateBoard,
   moveCardBetweenDifferentColumn,
+  getAllBoards,
 }

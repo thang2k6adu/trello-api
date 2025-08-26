@@ -148,6 +148,23 @@ const updateBoard = async (boardId, updateData) => {
   }
 }
 
+const getAllBoards = async (filter = {}) => {
+  try {
+    // Thêm mặc định _destroy: false
+    const query = { _destroy: false, ...filter }
+
+    const boards = await GET_DB()
+      .collection(BOARD_COLLECTION_NAME)
+      .find(query)
+      .sort({ createdAt: -1 }) // sắp xếp mới nhất lên trước, tuỳ ý
+      .toArray()
+
+    return boards
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
 export const boardModel = {
   BOARD_COLLECTION_NAME,
   BOARD_COLLECTION_SCHEMA,
@@ -157,4 +174,5 @@ export const boardModel = {
   pushColumnOrderIds,
   updateBoard,
   pullColumnOrderIds,
+  getAllBoards
 }
