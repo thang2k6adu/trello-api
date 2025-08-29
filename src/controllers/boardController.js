@@ -19,7 +19,7 @@ const createBoard = async (req, res, next) => {
       }
     }
     req.body.columnOrderIds = columnOrderIds
-    req.body.image = req.file.filename ?? ''
+    req.body.image = req?.file?.filename ?? req.body.image
 
     // Điều hướng sang tầng Service
     const createdBoard = await boardService.createBoard(req.body)
