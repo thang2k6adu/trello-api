@@ -9,9 +9,10 @@ const createBoard = async (req, res, next) => {
   //Nên vừa validate ở BE, vừa validate ở FE
   const correctValidation = Joi.object({
     title: Joi.string().required().min(3).max(50).trim().strict(),
+    slug: Joi.string().min(3).trim().strict(),
     description: Joi.string().required().min(3).max(256).trim().strict(),
     type: Joi.string().valid(BOARD_TYPE.PUBLIC, BOARD_TYPE.PRIVATE).required(),
-  })
+  }).unknown(true) // cho phép thêm field ngoài schema nếu cần
 
   try {
     // Chỉ định abortEarly: false trường hợp có nhiều lỗi không tắt sớm

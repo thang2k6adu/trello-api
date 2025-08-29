@@ -16,6 +16,7 @@ const START_SERVER = () => {
 
   // Enable req.body data with express.json() middleware, process RAW data
   app.use(express.json())
+  app.use(express.urlencoded({ extended: true }));
 
   //Use APIs_V1
   app.use('/v1', APIs_V1)
