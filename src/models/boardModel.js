@@ -13,7 +13,7 @@ const BOARD_COLLECTION_SCHEMA = Joi.object({
   slug: Joi.string().required().min(3).trim().strict(),
   image: Joi.string().trim().strict().allow(null, ''),
   color: Joi.string().trim().strict().allow(null, ''),
-  description: Joi.string().required().min(3).max(256).trim().strict(),
+  description: Joi.string().min(3).max(256).trim().strict(),
   type: Joi.string().valid(BOARD_TYPE.PUBLIC, BOARD_TYPE.PRIVATE).required(),
   columnOrderIds: Joi.array()
     .items(Joi.string().pattern(OBJECT_ID_RULE).message(OBJECT_ID_RULE_MESSAGE))
