@@ -9,6 +9,17 @@ const createBoard = async (req, res, next) => {
     // console.log('req.files:', req.files)
     // console.log('req.cookies:', req.cookies)
     // console.log('req.jwtDecoded:', req.jwtDecoded)
+    let columnOrderIds = req.body.columnOrderIds
+
+    if (typeof columnOrderIds === 'string') {
+      try {
+        columnOrderIds = JSON.parse(columnOrderIds)
+      } catch (e) {
+        columnOrderIds = []
+      }
+    }
+    req.body.columnOrderIds = columnOrderIds
+    req.body.image = req.file.filename ?? ''
 
     // Điều hướng sang tầng Service
     const createdBoard = await boardService.createBoard(req.body)
