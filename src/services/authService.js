@@ -4,6 +4,7 @@ import { verifyPassword, hashPassword } from '~/utils/password'
 import { userModel } from '~/models/userModel'
 import { userPasswordModel } from '~/models/userPasswordModel'
 import { env } from '~/config/environment'
+import { sendVerificationEmail } from '~/utils/email'
 
 const login = async ({ email, password, remember }) => {
   // 1. Kiểm tra tồn tại user
@@ -131,7 +132,7 @@ const register = async ({ name, email, password, country }) => {
   await userPasswordModel.createUserPassword(userPasswordData)
 
   // 7. Gửi email xác thực (implement later)
-  // await sendVerificationEmail(email, verificationToken)
+  await sendVerificationEmail(email, verificationToken)
 
   // 8. Trả thông tin
   const newUser = await userModel.findOneById(userId)
@@ -145,7 +146,22 @@ const register = async ({ name, email, password, country }) => {
   }
 }
 
-const logout = async (userId, token) => {
+const verifyEmail = async (token) => {
+  // 1. giải mã token được gửi trong email
+  const decoded = jwt.verify(token, process.env.JWT_VERIFICATION_SECRET)
+  //2. tìm user bên trong db dựa vào token
+  const user = await userModel.findOneByEmail(decoded.email)
+  if (!user) {
+    const error = new Error('Invalid verification token')
+    error.status = 400
+    throw error
+  }
+  // nếu hợp lệ -> xét emailVerìied = true
+  await userPasswordModel.updateEmailVerified(user._id, true)
+  return { message: 'Email verified successfully!' }
+}
+
+async function logout(userId, token) {
   try {
     await userPasswordModel.removeLoggedSession(userId, token)
     return { message: 'Logged out successfully' }
@@ -183,4 +199,5 @@ export const authService = {
   register,
   logout,
   refreshToken,
+  verifyEmail
 }
